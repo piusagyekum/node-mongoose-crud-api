@@ -1,6 +1,7 @@
+require("dotenv").config()
 const express = require("express")
 const mongoose = require("mongoose")
-const morgan = require('morgan')
+const morgan = require("morgan")
 const {
   all_blogs,
   find_blog,
@@ -10,21 +11,18 @@ const {
 } = require("./controllers/blogController")
 
 const app = express()
-app.use(morgan('dev'))
+app.use(morgan("dev"))
 app.use(express.json())
 
-const dbURI =
-  "mongodb+srv://thetruekobby:Password1@cluster0.osni8bu.mongodb.net/blogs?retryWrites=true&w=majority"
-
 mongoose
-  .connect(dbURI)
+  .connect(process.env.DB_URI)
   .then(() => {
-    app.listen(3000, "127.0.0.1", () => {
-      console.log("listening for requests on port 3000")
+    app.listen(process.env.PORT, () => {
+      console.log("listening for requests on port",process.env.PORT)
     })
   })
-  .catch(err => {
-    console.log("could not connect to the database")
+  .catch(() => {
+    console.log("Could not connect to the database")
   })
 
 app.get("/blogs", all_blogs)
